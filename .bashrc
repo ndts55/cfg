@@ -55,3 +55,6 @@ gpa() {
   gcm $@
   gp
 }
+
+# Completions
+source /usr/share/bash-completion/completions/git
