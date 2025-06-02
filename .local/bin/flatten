@@ -1,0 +1,134 @@
+#!/usr/bin/python3
+import os
+import re
+import shutil
+from argparse import ArgumentParser
+from typing import Dict, Callable, Optional
+
+
+def main(
+    root: str,
+    separator: str,
+    virtual: bool,
+    no_filename: bool,
+    pattern: Optional[str],
+    lift: int,
+) -> None:
+    flattened = flattened_filenames(
+        root,
+        combine_names=lambda t, v: f"{t}{separator}{v}",
+        include_filename=not no_filename,
+        pattern=pattern,
+        lift=lift,
+    )
+    if virtual:
+        print("")
+        for src, dst in flattened.items():
+            print(f"{src} -> {dst}")
+    else:
+        flatten_structure(flattened)
+        remove_empty_folders(root)
+
+
+def flattened_filenames(
+    root: str,
+    combine_names: Callable[[str, str], str],
+    include_filename: bool,
+    pattern: Optional[str],
+    lift: int,
+) -> Dict[str, str]:
+    regex = re.compile(pattern) if pattern else None
+
+    def flatten_structure_rec(top: str) -> Dict[str, str]:
+        ret = {}
+        top_name = os.path.basename(top)
+        for entry in os.scandir(top):
+            if entry.is_dir():
+                flattened = flatten_structure_rec(entry.path)
+                ret |= {k: combine_names(top_name, v) for (k, v) in flattened.items()}
+            elif entry.is_file() and (not regex or regex.match(entry.name)):
+                ret[entry.path] = (
+                    combine_names(top_name, entry.name)
+                    if include_filename
+                    else top_name + os.path.splitext(entry.name)[1]
+                )
+                if lift > 0:
+                    ret[entry.path] = os.path.join(
+                        os.path.dirname(ret[entry.path]),
+                        *([".."] * lift),
+                        os.path.basename(ret[entry.path]),
+                    )
+        return ret
+
+    ret = {}
+    for entry in os.scandir(root):
+        if entry.is_dir():
+            ret |= {
+                k: os.path.normpath(os.path.join(root, v))
+                for (k, v) in flatten_structure_rec(entry.path).items()
+            }
+        else:
+            ret[entry.path] = os.path.normpath(os.path.join(root, entry.name))
+    return ret
+
+
+def flatten_structure(flattened: Dict[str, str]) -> None:
+    for src, dst in flattened.items():
+        os.rename(src, dst)
+
+
+def remove_empty_folders(root: str) -> None:
+    for entry in os.scandir(root):
+        if entry.is_dir() and not os.listdir(entry):
+            shutil.rmtree(entry.path)
+
+
+if __name__ == "__main__":
+    parser = ArgumentParser(description="Flatten nested directory structures.")
+    parser.add_argument(
+        "--root",
+        "-r",
+        type=str,
+        help="Root of the nested directory structure.",
+        required=False,
+        default=".",
+    )
+    parser.add_argument(
+        "--virtual",
+        "-v",
+        action="store_true",
+        default=False,
+        help="Print out the resulting filenames without actually changing anything on disk.",
+    )
+    parser.add_argument(
+        "--no-filename",
+        "-f",
+        action="store_true",
+        default=False,
+        help="Do not include the filename in the flattened filenames.",
+    )
+    parser.add_argument(
+        "--separator", default="-", help="Separator for the flattened filenames."
+    )
+    parser.add_argument(
+        "--pattern",
+        type=str,
+        default=None,
+        help="Regular expression to filter filenames to flatten.",
+    )
+    parser.add_argument(
+        "--lift",
+        type=int,
+        default=0,
+        help="Number of levels to move the flattened files up in the directory structure. Default is 0.",
+    )
+
+    args = parser.parse_args()
+    main(
+        root=args.root,
+        separator=args.separator,
+        virtual=args.virtual,
+        no_filename=args.no_filename,
+        pattern=args.pattern,
+        lift=args.lift,
+    )

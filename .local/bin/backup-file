@@ -1,0 +1,113 @@
+#!/usr/bin/python3
+import os
+import glob
+import shutil
+from argparse import Namespace, ArgumentParser
+
+MAXN = 10
+MINN = 1
+BACKUP_POSTFIX = ".backup"
+
+
+def shift_backup_files(path: os.PathLike, n: int) -> bool:
+    """
+    Shifts backup file numbers and deletes any backup whose number is larger than `n`.
+    We assume `n` is larger than 0, `path` exists and its size is larger than 0.
+
+    Args:
+        path: Path to the file we want backup.
+        n: Maximum number of backup files.
+    """
+    assert n >= MINN
+    assert n <= MAXN
+    assert os.path.exists(path)
+    assert os.path.getsize(path) > 0
+    m = n - 2
+    for filename in sorted(glob.glob(f"{path}{BACKUP_POSTFIX}*"), reverse=True):
+        # Ignore backup files that do not follow the pattern.
+        try:
+            filenumber = int(filename.split(BACKUP_POSTFIX)[1])
+        except (ValueError, IndexError):
+            continue
+
+        # Remove backup files whose number is larger than m = n-2 because we will shift the backup files
+        # to occupy the indices 1 to n-1 and then create the backup file with index 0, thus arriving
+        # at a total of n backup files. For example, with n=10 we get the indices:
+        # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # -> [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        # -> [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # -> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        if filenumber > m:
+            try:
+                os.remove(filename)
+            except (IsADirectoryError, FileNotFoundError):
+                print(f"could not remove {filename}")
+                return False
+        else:
+            try:
+                os.rename(filename, f"{path}{BACKUP_POSTFIX}{filenumber + 1}")
+            except OSError:
+                print(f"could not shift {filename}")
+                return False
+
+    return True
+
+
+def create_new_backup(path: os.PathLike) -> bool:
+    try:
+        shutil.copy2(path, f"{path}{BACKUP_POSTFIX}0")
+    except OSError:
+        return False
+    return True
+
+
+def main(path: os.PathLike, n: int) -> None:
+    # First, we check and sanitize the user input. This is delicate stuff we're working with here.
+    # We only do work when
+    # 1. the file exists
+    if not os.path.exists(path):
+        print(f"{path} does not exist")
+        return
+    # 2. the latest backup file is older than the file we need to backup
+    latest_backup_filename = f"{path}{BACKUP_POSTFIX}0"
+    if os.path.exists(latest_backup_filename) and os.path.getmtime(
+        latest_backup_filename
+    ) >= os.path.getmtime(path):
+        print(f"latest backup is newer than {path}")
+        return
+    # 3. the file has size > 0
+    if os.path.getsize(path) <= 0:
+        print(f"size of {path} is 0, for integrity reasons no backups will be modified")
+        return
+    # 4. n is in [1, 10]:
+    if n < MINN or n > MAXN:
+        print(f"the valid range for n is [{MINN}, {MAXN}]")
+        return
+
+    if os.path.exists(latest_backup_filename) and not shift_backup_files(path, n):
+        print("error shifting the backup files")
+        return
+
+    if not create_new_backup(path):
+        print("error creating new backup file")
+
+
+def parse_arguments() -> Namespace:
+    parser = ArgumentParser(
+        prog="backup-file", description="Manages backups of the given file."
+    )
+    parser.add_argument(
+        "file", help="Path to the file of which you want to create a backup."
+    )
+    parser.add_argument(
+        "-n",
+        type=int,
+        default=10,
+        help="Maximum number of backup files. Default is 10. Minimum is 1. Maximum is 10.",
+    )
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    ns = parse_arguments()
+    main(path=ns.file, n=ns.n)
