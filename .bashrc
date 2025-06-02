@@ -11,13 +11,16 @@ alias config="/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME"
 
 # Environment Variables and PATH
 pathmunge() {
-  if ! echo $PATH | /bin/grep -E -q "(^|:)$1($|:)"; then
+  case ":${PATH}:" in
+  *:"$1":*) ;;
+  *)
     if [ "$2" = "after" ]; then
       PATH=$PATH:$1
     else
       PATH=$1:$PATH
     fi
-  fi
+    ;;
+  esac
 }
 
 export GOPATH=$HOME/.go
