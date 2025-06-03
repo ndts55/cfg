@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch GNOME light/dark theme changes and sync tmux
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/theme-watcher
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+

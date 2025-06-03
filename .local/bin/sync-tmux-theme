@@ -1,0 +1,13 @@
+#!/bin/bash
+
+THEME=$(gsettings get org.gnome.desktop.interface color-scheme)
+
+if echo "$THEME" | grep -iq "dark"; then
+  ln -sF "$HOME/.config/tmux/themes/dark.conf" "$HOME/.config/tmux/themes/current_theme.conf"
+else
+  ln -sF "$HOME/.config/tmux/themes/light.conf" "$HOME/.config/tmux/themes/current_theme.conf"
+fi
+
+if tmux info &>/dev/null; then
+  tmux source-file "$HOME/.config/tmux/tmux.conf"
+fi
