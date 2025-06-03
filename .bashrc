@@ -27,9 +27,11 @@ pathmunge() {
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR=/usr/bin/nvim
 export GOPATH=$HOME/.go
+export TERM=tmux-256color
 
 pathmunge "$GOPATH/bin"
 pathmunge "$HOME/.cargo/bin"
+pathmunge "$HOME/.local/bin"
 pathmunge "$HOME/.local/share/TeXLive/2025/bin/x86_64-linux" after
 pathmunge "$HOME/Desktop/NVIDIA-Nsight-Compute-2025.2" after
 
