@@ -7,31 +7,31 @@ fi
 
 # Config Setup
 alias config="/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME"
-# config config --local status.showUntrackedFiles no
 
 # Environment Variables and PATH
 pathmunge() {
-  case ":${PATH}:" in
-  *:"$1":*) ;;
-  *)
-    if [ "$2" = "after" ]; then
-      PATH=$PATH:$1
-    else
-      PATH=$1:$PATH
-    fi
-    ;;
-  esac
+  if [[ -d "$1" ]]; then
+    case ":${PATH}:" in
+    *:"$1":*) ;;
+    *)
+      if [ "$2" = "after" ]; then
+        PATH=$PATH:$1
+      else
+        PATH=$1:$PATH
+      fi
+      ;;
+    esac
+  fi
 }
 
-export GOPATH=$HOME/.go
-pathmunge "$GOPATH/bin"
-
 export QT_QPA_PLATFORMTHEME="qt5ct"
-
 export EDITOR=/usr/bin/nvim
+export GOPATH=$HOME/.go
 
+pathmunge "$GOPATH/bin"
 pathmunge "$HOME/.cargo/bin"
-pathmunge "$HOME/.local/share/TeXLive/2025/bin/x86_64-linux"
+pathmunge "$HOME/.local/share/TeXLive/2025/bin/x86_64-linux" after
+pathmunge "$HOME/Desktop/NVIDIA-Nsight-Compute-2025.2" after
 
 # Aliases
 ## LS
