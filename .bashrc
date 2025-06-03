@@ -28,6 +28,7 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR=/usr/bin/nvim
 export GOPATH=$HOME/.go
 export TERM=tmux-256color
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
 
 pathmunge "$GOPATH/bin"
 pathmunge "$HOME/.cargo/bin"
@@ -57,7 +58,7 @@ alias vim="nvim"
 # Functions
 gpa() {
   gaa
-  gcm $@
+  gcm "$@"
   gp
 }
 
