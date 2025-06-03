@@ -2,13 +2,14 @@
 
 while read -r line; do
   echo "$line"
+  theme="light"
   if [ "$line" == "color-scheme: 'default'" ]; then
     echo "LIGHT MODE"
-    # tmux source-file ~/.config/tmux/themes/light.conf
-    "$HOME"/.local/bin/sync-tmux-theme light
+    theme="light"
   else
     echo "DARK MODE"
-    # tmux source-file ~/.config/tmux/themes/dark.conf
-    "$HOME"/.local/bin/sync-tmux-theme dark
+    theme="dark"
   fi
+  "$HOME"/.local/bin/sync-tmux-theme $theme
+  "$HOME"/.local/bin/sync-nvim-theme $theme
 done < <(gsettings monitor org.gnome.desktop.interface color-scheme)

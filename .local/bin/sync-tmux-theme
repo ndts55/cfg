@@ -1,10 +1,6 @@
 #!/bin/bash
 
-if [ "$1" == "light" ]; then
-  ln -sf "$HOME/.config/tmux/themes/light.conf" "$HOME/.config/tmux/themes/current_theme.conf"
-else
-  ln -sf "$HOME/.config/tmux/themes/dark.conf" "$HOME/.config/tmux/themes/current_theme.conf"
-fi
+ln -sf "$HOME/.config/tmux/themes/$1.conf" "$HOME/.config/tmux/themes/current_theme.conf"
 
 if tmux info &>/dev/null; then
   tmux source-file "$HOME/.config/tmux/tmux.conf"
