@@ -6,7 +6,9 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # Config Setup
-alias config="/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME"
+config() {
+  /usr/bin/git --git-dir="$HOME"/.cfg --work-tree="$HOME" "$@"
+}
 
 # Environment Variables and PATH
 pathmunge() {
@@ -28,7 +30,7 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR=/usr/bin/nvim
 export GOPATH=$HOME/.go
 export TERM=tmux-256color
-export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+export NVIM_LISTEN_ADDRESS=$HOME/.nvimsocket
 
 pathmunge "$GOPATH/bin"
 pathmunge "$HOME/.cargo/bin"

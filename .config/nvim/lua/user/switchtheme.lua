@@ -11,7 +11,6 @@ function M.switch_theme(theme)
 end
 
 function M.setup()
-  vim.cmd([[ let $NVIM_LISTEN_ADDRESS = '/tmp/nvimsocket' ]])
   vim.api.nvim_create_user_command("SwitchTheme", function(opts)
     M.switch_theme(opts.args)
   end, {
