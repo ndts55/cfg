@@ -5,11 +5,6 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
-# Config Setup
-config() {
-  /usr/bin/git --git-dir="$HOME"/.cfg --work-tree="$HOME" "$@"
-}
-
 # Environment Variables and PATH
 pathmunge() {
   if [[ -d "$1" ]]; then
