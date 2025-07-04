@@ -38,27 +38,6 @@ export PATH
 ## LS
 unalias ls
 alias ls="eza"
-alias la="eza -a"
-alias ll="eza -l"
-## Git
-alias gstat="git status -s"
-alias gdiff="git diff"
-alias gaa="git add -A"
-alias gcm="git commit -m"
-alias gp="git push"
-alias gb="git branch"
-alias gch="git checkout"
-alias gchb="git checkout -b"
-## Misc
-alias nano="nvim"
-alias vim="nvim"
-
-# Functions
-gpa() {
-  gaa
-  gcm "$@"
-  gp
-}
 
 # Completions
 source /usr/share/bash-completion/completions/git
