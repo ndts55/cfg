@@ -1,0 +1,65 @@
+#!/usr/bin/python3
+import argparse
+import os
+import re
+
+def main(target: str, virtual: bool):
+    previous_dir = os.getcwd()
+    if not os.path.isdir(target) and not os.path.isfile(target):
+        print("Unsupported target")
+        exit(1)
+    contents = sorted(n for n in (os.listdir(target)) if not n.startswith(".")) if os.path.isdir(target) else [target]
+
+    if os.path.isdir(target):
+        os.chdir(target)
+
+    updates = {name: newname(name) for name in contents}
+    if virtual:
+        print_updates(updates)
+    else:
+        apply_updates(updates)
+
+def apply_updates(updates: dict[str, str]):
+    for (old, new) in updates.items():
+        if old != new:
+            os.rename(old, new)
+
+def print_updates(updates: dict[str, str]):
+    for (old, new) in updates.items():
+        print(f"{old} -> {new}")
+
+def newname(name: str) -> str:
+    if os.path.isfile(name):
+        (filename, ext) = os.path.splitext(name)
+        cleanname = re.sub(r"[,.;:]", " ", replace_chars(filename))
+        return f'{insert_separator(cleanname)}{ext}'
+    else:
+        cleanname = re.sub(r"[,.;:]", " ", replace_chars(name))
+        return insert_separator(cleanname)
+
+def insert_separator(name: str) -> str:
+    return re.sub(r"\s+", "-", name)
+
+def replace_chars(name: str) -> str:
+    return (name.lower()
+            .replace("ä", "ae")
+            .replace("ö", "oe")
+            .replace("ü", "ue")
+            .replace("ß", "ss")
+            .replace("-", " ")
+            .replace("'", "")
+            )
+
+def parseargs() -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        prog="convert filenames",
+        description="Converts filenames in given directory to hyphenated lowercase"
+    )
+    p.add_argument("-v", "--virtual", action="store_true", help="Dry run flag. Defaults to false.")
+    p.add_argument("-t","--target", default=os.getcwd(), help="Target directory or file. Defaults to current working directory.")
+
+    return p.parse_args()
+
+if __name__ == "__main__":
+    args = parseargs()
+    main(args.target, args.virtual)
