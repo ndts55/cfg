@@ -50,7 +50,7 @@ def newname(name: str, separator: str, capitalization: Capitalization) -> str:
     if os.path.isfile(name):
         (filename, ext) = os.path.splitext(name)
         cleanname = f(filename)
-        return f'{cleanname}.{ext}'
+        return f'{cleanname}{ext}'
     else:
         return f(name)
 
