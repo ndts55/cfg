@@ -2,8 +2,9 @@
 import argparse
 import os
 import re
+from enum import Enum
 
-def main(target: str, virtual: bool):
+def main(target: str, virtual: bool, separator: str, capitalize: bool, capitalizeall: bool):
     previous_dir = os.getcwd()
     if not os.path.isdir(target) and not os.path.isfile(target):
         print("Unsupported target")
@@ -13,7 +14,7 @@ def main(target: str, virtual: bool):
     if os.path.isdir(target):
         os.chdir(target)
 
-    updates = {name: newname(name) for name in contents}
+    updates = {name: newname(name, separator, Capitalization.from_bools(capitalize, capitalizeall)) for name in contents}
     if virtual:
         print_updates(updates)
     else:
@@ -28,17 +29,30 @@ def print_updates(updates: dict[str, str]):
     for (old, new) in updates.items():
         print(f"{old} -> {new}")
 
-def newname(name: str) -> str:
+class Capitalization(Enum):
+    Lower = lambda s: s.lower()
+    Title = lambda s: s.title()
+    Upper = lambda s: s.upper()
+
+    @classmethod
+    def from_bools(cls, capitalize: bool, capitalizeall: bool):
+        if capitalizeall:
+            return cls.Upper
+        elif capitalize:
+            return cls.Title
+        else:
+            return cls.Lower
+
+def newname(name: str, separator: str, capitalization: Capitalization) -> str:
+    pat = re.compile(r"[,.;:\-']")
+    def f(fname: str) -> str:
+        return separator.join((capitalization(p) for p in pat.split(replace_chars(fname)) if p))
     if os.path.isfile(name):
         (filename, ext) = os.path.splitext(name)
-        cleanname = re.sub(r"[,.;:]", " ", replace_chars(filename))
-        return f'{insert_separator(cleanname)}{ext}'
+        cleanname = f(filename)
+        return f'{cleanname}.{ext}'
     else:
-        cleanname = re.sub(r"[,.;:]", " ", replace_chars(name))
-        return insert_separator(cleanname)
-
-def insert_separator(name: str) -> str:
-    return re.sub(r"\s+", "-", name)
+        return f(name)
 
 def replace_chars(name: str) -> str:
     return (name.lower()
@@ -46,8 +60,6 @@ def replace_chars(name: str) -> str:
             .replace("ö", "oe")
             .replace("ü", "ue")
             .replace("ß", "ss")
-            .replace("-", " ")
-            .replace("'", "")
             )
 
 def parseargs() -> argparse.Namespace:
@@ -57,9 +69,12 @@ def parseargs() -> argparse.Namespace:
     )
     p.add_argument("-v", "--virtual", action="store_true", help="Dry run flag. Defaults to false.")
     p.add_argument("-t","--target", default=os.getcwd(), help="Target directory or file. Defaults to current working directory.")
+    p.add_argument("-s", "--separator", default="-", type=str, help="Word separator. Default is dash.")
+    p.add_argument("-c", "--capitalize", action="store_true", help="Capitalize the first letter of every word.")
+    p.add_argument("-C", "--capitalizeall", action="store_true", help="Capitalize all letter of every word.")
 
     return p.parse_args()
 
 if __name__ == "__main__":
     args = parseargs()
-    main(args.target, args.virtual)
+    main(args.target, args.virtual, args.separator, args.capitalize, args.capitalizeall)
