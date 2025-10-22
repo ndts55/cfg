@@ -69,7 +69,7 @@ def parseargs() -> argparse.Namespace:
     )
     p.add_argument("-v", "--virtual", action="store_true", help="Dry run flag. Defaults to false.")
     p.add_argument("-t","--target", default=os.getcwd(), help="Target directory or file. Defaults to current working directory.")
-    p.add_argument("-s", "--separator", default="-", type=str, help="Word separator. Default is dash.")
+    p.add_argument("-s", "--separator", default="_", type=str, help="Word separator. Default is underscore.")
     p.add_argument("-c", "--capitalize", action="store_true", help="Capitalize the first letter of every word.")
     p.add_argument("-C", "--capitalizeall", action="store_true", help="Capitalize all letter of every word.")
 
