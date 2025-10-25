@@ -44,7 +44,7 @@ class Capitalization(Enum):
             return cls.Lower
 
 def newname(name: str, separator: str, capitalization: Capitalization) -> str:
-    pat = re.compile(r"[,.;:\-']")
+    pat = re.compile(r"[_,.;:\-'\s]")
     def f(fname: str) -> str:
         return separator.join((capitalization(p) for p in pat.split(replace_chars(fname)) if p))
     if os.path.isfile(name):
