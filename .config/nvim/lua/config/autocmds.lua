@@ -25,3 +25,36 @@ sync_gnome_theme()
 vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter" }, {
   callback = sync_gnome_theme,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    local Terminal = require("toggleterm.terminal").Terminal
+
+    vim.keymap.set("n", "<leader>rp", function()
+      local file = vim.fn.expand("%:p")
+
+      if not _PYTHON_TERM then
+        _PYTHON_TERM = Terminal:new({
+          cmd = "python3 " .. file,
+          hidden = true,
+          direction = "horizontal",
+          close_on_exit = false,
+          on_exit = function()
+            _PYTHON_TERM = nil
+          end,
+        })
+      else
+        _PYTHON_TERM:shutdown()
+        _PYTHON_TERM = Terminal:new({
+          cmd = "python3 " .. file,
+          hidden = true,
+          direction = "horizontal",
+          close_on_exit = false,
+        })
+      end
+
+      _PYTHON_TERM:toggle()
+    end, { buffer = true, desc = "Run Python script" })
+  end,
+})
