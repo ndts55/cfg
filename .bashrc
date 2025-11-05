@@ -38,6 +38,8 @@ export PATH
 ## LS
 unalias ls
 alias ls="eza"
+## EDITOR
+alias vim="env -u NVIM_LISTEN_ADDRESS nvim"
 
 # Completions
 source /usr/share/bash-completion/completions/git
@@ -46,7 +48,3 @@ source /usr/share/bash-completion/completions/git
 source "$HOME"/.git-prompt.sh
 
 export PS1='\[\e[1m\]\[\e[32m\]\u@\h\[\e[00m\]\[\e[1m\]:\[\e[32m\]\w \[\e[91m\]$(__git_ps1 "(%s) ")\[\e[00m\]$ '
-
-# if command -v tmux >/dev/null && [ -z "$TMUX" ]; then
-#   exec tmux new-session -As $(whoami)
-# fi
