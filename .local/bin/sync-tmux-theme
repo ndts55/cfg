@@ -1,7 +1,13 @@
 #!/bin/bash
 
-ln -sf "$HOME/.config/tmux/themes/$1.conf" "$HOME/.config/tmux/themes/current_theme.conf"
+next_theme_file="$HOME/.config/tmux/themes/$1.conf"
+
+echo "[$0] Setting theme to $next_theme_file"
+
+ln -sf "$next_theme_file" "$HOME/.config/tmux/themes/current_theme.conf"
 
 if tmux info &>/dev/null; then
   tmux source-file "$HOME/.config/tmux/tmux.conf"
+else
+  echo "[$0] tmux info unavailable"
 fi

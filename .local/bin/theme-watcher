@@ -10,6 +10,7 @@ while read -r line; do
     echo "DARK MODE"
     theme="dark"
   fi
+  "$HOME"/.local/bin/sync-term-theme $theme
   "$HOME"/.local/bin/sync-tmux-theme $theme
   "$HOME"/.local/bin/sync-nvim-theme $theme
 done < <(gsettings monitor org.gnome.desktop.interface color-scheme)

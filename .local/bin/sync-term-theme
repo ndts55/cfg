@@ -1,0 +1,12 @@
+#!/bin/bash
+theme="$1"
+
+if [ "$theme" == "light" ]; then
+  kitty_theme="Github Light"
+else
+  kitty_theme="Github Dark"
+fi
+
+echo "[$0] Setting theme to $kitty_theme"
+
+kitty +kitten themes --reload-in=all "$kitty_theme"

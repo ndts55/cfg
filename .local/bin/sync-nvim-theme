@@ -1,2 +1,5 @@
 #!/bin/bash
+
+echo "[$0] Executing SwitchTheme $1"
+
 nvr --servername "$HOME"/.nvimsocket --remote-send ":SwitchTheme $1<CR>" --nostart
