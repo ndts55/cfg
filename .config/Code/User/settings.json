@@ -144,7 +144,11 @@
     "python.terminal.useEnvFile": true,
     "explorer.confirmDelete": false,
     "commands.populateCommandPalette": true,
-    "workbench.preferredLightColorTheme": "Light Modern",
+    "workbench.preferredLightColorTheme": "Dark 2026",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
-    "git.openRepositoryInParentFolders": "always"
+    "git.openRepositoryInParentFolders": "always",
+    "[uiua]": {
+        "editor.defaultFormatter": "uiua-lang.uiua-vscode"
+    },
+    "editor.formatOnSave": true
 }
