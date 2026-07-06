@@ -1,7 +1,150 @@
 {
-    "workbench.startupEditor": "none",
-    "window.titleBarStyle": "native",
+    "telemetry.enableTelemetry": false,
+    "extensions.ignoreRecommendations": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "editor.lineNumbers": "relative",
+    "editor.wordWrap": "on",
+    "editor.fontSize": 14,
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                ";",
+                "f",
+            ],
+            "commands": [
+                "workbench.action.quickOpen",
+            ],
+        },
+        {
+            "before": [
+                "K",
+            ],
+            "commands": [
+                "editor.action.showHover",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "a",
+            ],
+            "commands": [
+                "workbench.action.showCommands",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "s",
+            ],
+            "commands": [
+                "workbench.action.showAllSymbols",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "d",
+            ],
+            "commands": [
+                "workbench.action.gotoSymbol",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "e",
+            ],
+            "commands": [
+                "workbench.action.showAllEditors",
+            ],
+        },
+        {
+            "before": [
+                ",",
+                ",",
+            ],
+            "commands": [
+                "workbench.files.action.showActiveFileInExplorer",
+            ],
+        },
+        {
+            "before": [
+                " ",
+            ],
+            "commands": [
+                "workbench.action.files.save",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "t",
+            ],
+            "commands": [
+                "workbench.action.terminal.focus",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "c",
+                "c",
+            ],
+            "commands": [
+                "gcov-viewer.toggle",
+            ],
+        },
+        {
+            "before": [
+                ";",
+                "c",
+                "r",
+            ],
+            "commands": [
+                "gcov-viewer.reloadGcdaFiles",
+            ],
+        },
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": [
+                ">",
+            ],
+            "commands": [
+                "editor.action.indentLines",
+            ],
+        },
+        {
+            "before": [
+                "<",
+            ],
+            "commands": [
+                "editor.action.outdentLines",
+            ],
+        },
+    ],
+    "telemetry.telemetryLevel": "off",
+    "explorer.excludeGitIgnore": true,
+    "explorer.openEditors.sortOrder": "alphabetical",
+    "task.allowAutomaticTasks": "on",
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "python.analysis.typeCheckingMode": "standard",
+    "terminal.integrated.fontSize": 14,
+    "editor.snippetSuggestions": "top",
+    "git.ignoreMissingGitWarning": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.autoDetectColorScheme": true,
     "workbench.colorTheme": "Light 2026",
+    "chat.plugins.enabled": true,
+    "testing.automaticallyOpenTestResults": "neverOpen",
+    "python.terminal.useEnvFile": true,
+    "explorer.confirmDelete": false,
+    "commands.populateCommandPalette": true,
+    "workbench.preferredLightColorTheme": "Light Modern",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
-    "editor.fontSize": 16
+    "git.openRepositoryInParentFolders": "always"
 }
