@@ -137,18 +137,23 @@
     "editor.snippetSuggestions": "top",
     "git.ignoreMissingGitWarning": true,
     "diffEditor.ignoreTrimWhitespace": false,
-    "window.autoDetectColorScheme": true,
     "workbench.colorTheme": "Light 2026",
     "chat.plugins.enabled": true,
     "testing.automaticallyOpenTestResults": "neverOpen",
     "python.terminal.useEnvFile": true,
     "explorer.confirmDelete": false,
     "commands.populateCommandPalette": true,
-    "workbench.preferredLightColorTheme": "Dark 2026",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
     "git.openRepositoryInParentFolders": "always",
     "[uiua]": {
         "editor.defaultFormatter": "uiua-lang.uiua-vscode"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "uiua.inlayHints.inlineSignatureHints": false,
+    "zig.zls.enabled": "on",
+    "zig.zls.semanticTokens": "full",
+    "search.experimental.useIgnoreFilesInFindFiles": true,
+    "workbench.startupEditor": "none",
+    "explorer.confirmDragAndDrop": false,
+    "window.titleBarStyle": "native"
 }
